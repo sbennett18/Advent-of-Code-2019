@@ -30,14 +30,20 @@ fn compute_fuel_required(mass: i32) -> i32 {
 #[cfg(test)]
 mod tests {
     use day01::original_1a;
+    use day01::original_1b;
     use std::fs;
     const ANSWER_1A: i32 = 3367126;
+    const ANSWER_1B: i32 = 5047796;
 
     #[test]
     fn original() {
         assert_eq!(
             ANSWER_1A,
             original_1a(&fs::read_to_string("input/2019/day1.txt").unwrap().trim())
-                        );
+        );
+        assert_eq!(
+            ANSWER_1B,
+            original_1b(&fs::read_to_string("input/2019/day1.txt").unwrap().trim())
+        );
     }
 }
