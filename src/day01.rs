@@ -5,7 +5,7 @@ pub fn original_1a(input: &str) -> i32 {
     input
         .lines()
         .map(|l| l.trim().parse::<i32>().unwrap())
-        .map(|f| cmp::max((f / 3) - 2, 0))
+        .map(|m| compute_fuel_required(m))
         .sum()
 }
 
