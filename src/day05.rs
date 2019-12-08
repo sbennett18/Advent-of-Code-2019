@@ -10,7 +10,8 @@ pub fn original_5a(input: &str) -> i32 {
 }
 
 fn compute(mut prog: &mut Vec<i32>) -> i32 {
-    for ip in (0..prog.len()).step_by(4) {
+    let mut ip: usize = 0;
+    loop {
         /*
         println!(
             "{} {} {} {}",
@@ -41,14 +42,14 @@ fn compute(mut prog: &mut Vec<i32>) -> i32 {
             prog[ip + 3]
         );
         */
-        match opcode {
+        ip += match opcode {
             1 => op1_add(&mut prog, ip, param_modes),
             2 => op2_mul(&mut prog, ip, param_modes),
             3 => op3_input(&mut prog, ip),
             4 => op4_output(&mut prog, ip),
             99 => break,
             _ => panic!(),
-        }
+        };
     }
     prog[0]
 }
@@ -62,25 +63,31 @@ fn parameter_mode(prog: &Vec<i32>, param: i32, mode: i32) -> i32 {
     }
 }
 
-fn op1_add(prog: &mut Vec<i32>, ip: usize, param_modes: (i32, i32, i32)) {
+fn op1_add(prog: &mut Vec<i32>, ip: usize, param_modes: (i32, i32, i32)) -> usize {
     let v1 = parameter_mode(&prog, prog[ip + 1], param_modes.0);
     let v2 = parameter_mode(&prog, prog[ip + 2], param_modes.1);
     // let v3 = parameter_mode(&prog, prog[ip + 3], param_modes.2);
     let addr3: usize = prog[ip + 3] as usize;
-    prog[addr3] = v1 + v2
+    prog[addr3] = v1 + v2;
+    4
 }
 
-fn op2_mul(prog: &mut Vec<i32>, ip: usize, param_modes: (i32, i32, i32)) {
+fn op2_mul(prog: &mut Vec<i32>, ip: usize, param_modes: (i32, i32, i32)) -> usize {
     let v1 = parameter_mode(&prog, prog[ip + 1], param_modes.0);
     let v2 = parameter_mode(&prog, prog[ip + 2], param_modes.1);
     // let v3 = parameter_mode(&prog, prog[ip + 3], param_modes.2);
     let addr3: usize = prog[ip + 3] as usize;
-    prog[addr3] = v1 * v2
+    prog[addr3] = v1 * v2;
+    4
 }
 
-fn op3_input(prog: &mut Vec<i32>, ip: usize) {}
+fn op3_input(prog: &mut Vec<i32>, ip: usize) -> usize {
+    2
+}
 
-fn op4_output(prog: &mut Vec<i32>, ip: usize) {}
+fn op4_output(prog: &mut Vec<i32>, ip: usize) -> usize {
+    2
+}
 
 const GRAVITY_ASSIST_TARGET: i32 = 19690720;
 
