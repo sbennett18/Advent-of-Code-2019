@@ -87,7 +87,7 @@ mod tests {
     use day05::original_5b;
     use std::fs;
     const ANSWER_5A: i32 = 5346030;
-    const ANSWER_5B: i32 = 5741;
+    const ANSWER_5B: i32 = 0;
 
     #[test]
     fn original() {

@@ -10,3 +10,4 @@ bench = false
 [dependencies]
 aoc-runner = "*"
 aoc-runner-derive = "*"
+regex = "1"
