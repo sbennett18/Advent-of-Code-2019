@@ -39,6 +39,20 @@ macro_rules! update_moon_velocity {
     };
 }
 
+macro_rules! update_position {
+    ($a:expr, $c:ident) => {
+        $a.position.$c += $a.velocity.$c;
+    };
+}
+
+macro_rules! update_moon_position {
+    ($a:expr) => {
+        update_position!($a, x);
+        update_position!($a, y);
+        update_position!($a, z);
+    };
+}
+
 #[aoc_generator(day12)]
 pub fn generator(input: &str) -> Vec<(i32, i32, i32)> {
     let re = Regex::new(r"<(\w+)=(-?\d+),?\s*(\w+)=(-?\d+),?\s*(\w+)=(-?\d+),?\s*>").unwrap();
@@ -71,7 +85,7 @@ pub fn original_12a(input: &[(i32, i32, i32)]) -> i32 {
         })
         .collect();
 
-    for step in 1..=STEPS {
+    for _ in 1..=STEPS {
         for i in 0..bodies.len() {
             for j in 0..bodies.len() {
                 if i == j {
@@ -81,10 +95,7 @@ pub fn original_12a(input: &[(i32, i32, i32)]) -> i32 {
             }
         }
         for mut a in &mut bodies {
-            a.position.x += a.velocity.x;
-            a.position.y += a.velocity.y;
-            a.position.z += a.velocity.z;
-            // println!("{}: {:?}", step, a);
+            update_moon_position!(a);
         }
     }
     bodies
