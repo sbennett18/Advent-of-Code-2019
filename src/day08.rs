@@ -1,5 +1,3 @@
-
-
 #[aoc(day08, part1, original)]
 pub fn original_8a(input: &str) -> i64 {
     input
