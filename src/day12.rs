@@ -104,22 +104,71 @@ pub fn original_12a(input: &[(i32, i32, i32)]) -> i32 {
         .sum()
 }
 
+#[aoc(day12, part2, original)]
+pub fn original_12b(input: &[(i32, i32, i32)]) -> usize {
+    let initial_bodies: Vec<Moon> = input
+        .into_iter()
+        .map(|t| Moon {
+            position: CoordinateQuantity {
+                x: t.0,
+                y: t.1,
+                z: t.2,
+            },
+            velocity: CoordinateQuantity { x: 0, y: 0, z: 0 },
+        })
+        .collect();
+    let mut bodies: Vec<Moon> = initial_bodies.clone();
+
+    let mut step: usize = 0;
+    loop {
+        step += 1;
+        let mut kinetic_energy: i32 = 0;
+        for i in 0..bodies.len() {
+            for j in 0..bodies.len() {
+                if i == j {
+                    continue;
+                }
+                update_moon_velocity!(bodies[i], bodies[j]);
+            }
+            kinetic_energy += bodies[i].velocity.compute_energy();
+        }
+        if step % 100_000_000 == 0 {
+            println!("Step {}", step);
+        }
+        if kinetic_energy == 0 {
+            println!("Step {}: {:?}", step, initial_bodies);
+            println!("Step {}: {:?}", step, bodies);
+            if bodies == initial_bodies {
+                return step;
+            }
+        }
+        for mut a in &mut bodies {
+            update_moon_position!(a);
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use day12::generator;
     use day12::original_12a;
+    use day12::original_12b;
     use std::fs;
 
     const ANSWER_12A: i32 = 8310;
 
-    /*
-        const PART1_TEST1_INPUT: &str = "<x=-1, y=0, z=2>
+    const PART1_TEST1_INPUT: &str = "<x=-1, y=0, z=2>
     <x=2, y=-10, z=-7>
     <x=4, y=-8, z=8>
     <x=3, y=5, z=-1>";
-        const PART1_TEST1_STEPS: usize = 10;
-        const PART1_TEST1_OUTPUT: i32 = 179;
-        */
+    /*
+    const PART1_TEST1_STEPS: usize = 10;
+    const PART1_TEST1_OUTPUT: i32 = 179;
+    */
+    const PART1_TEST2_INPUT: &str = "<x=-8, y=-10, z=0>
+    <x=5, y=5, z=10>
+    <x=2, y=-7, z=3>
+    <x=9, y=-8, z=-3>";
 
     #[test]
     fn original() {
@@ -129,5 +178,7 @@ mod tests {
                 &fs::read_to_string("input/2019/day12.txt").unwrap().trim()
             ))
         );
+        assert_eq!(2772, original_12b(&generator(PART1_TEST1_INPUT)));
+        assert_eq!(4_686_774_924, original_12b(&generator(PART1_TEST2_INPUT)));
     }
 }
